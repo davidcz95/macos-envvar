@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:macos_envvar/counter/counter.dart';
+import 'package:macos_envvar/features/dashboard/dashboard.dart';
 import 'package:macos_envvar/l10n/l10n.dart';
 
 class App extends StatelessWidget {
