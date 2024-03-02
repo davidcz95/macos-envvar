@@ -7,18 +7,18 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../helpers/helpers.dart';
 
-class MockCounterCubit extends MockCubit<int> implements CounterCubit {}
+class MockCounterCubit extends MockCubit<int> implements DashboardCubit {}
 
 void main() {
   group('CounterPage', () {
     testWidgets('renders CounterView', (tester) async {
-      await tester.pumpApp(const CounterPage());
-      expect(find.byType(CounterView), findsOneWidget);
+      await tester.pumpApp(const DashboardPage());
+      expect(find.byType(DashboardView), findsOneWidget);
     });
   });
 
   group('CounterView', () {
-    late CounterCubit counterCubit;
+    late DashboardCubit counterCubit;
 
     setUp(() {
       counterCubit = MockCounterCubit();
@@ -30,7 +30,7 @@ void main() {
       await tester.pumpApp(
         BlocProvider.value(
           value: counterCubit,
-          child: const CounterView(),
+          child: const DashboardView(),
         ),
       );
       expect(find.text('$state'), findsOneWidget);
@@ -43,7 +43,7 @@ void main() {
       await tester.pumpApp(
         BlocProvider.value(
           value: counterCubit,
-          child: const CounterView(),
+          child: const DashboardView(),
         ),
       );
       await tester.tap(find.byIcon(Icons.add));
@@ -57,7 +57,7 @@ void main() {
       await tester.pumpApp(
         BlocProvider.value(
           value: counterCubit,
-          child: const CounterView(),
+          child: const DashboardView(),
         ),
       );
       await tester.tap(find.byIcon(Icons.remove));
