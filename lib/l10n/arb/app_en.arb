@@ -1,7 +1,9 @@
 {
     "@@locale": "en",
-    "counterAppBarTitle": "Counter",
+    "dashboardAppBarTitle": "Environment Variables",
     "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
-    }
+        "description": "Text shown in the AppBar of the Dashboard Page"
+    },
+    "loadButtonText": "Load env file"
+   
 }
