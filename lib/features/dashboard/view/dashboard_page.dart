@@ -26,7 +26,7 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
-  String? zshrcContent;
+  Map<String, dynamic>? zshrcContent;
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _DashboardViewState extends State<DashboardView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Welcome to the Dashboard'),
+          const Text('Welcome to the Envs Dashboard'),
           const SizedBox(height: 16),
           _buildZshrcContent(),
         ],
@@ -67,17 +67,45 @@ class _DashboardViewState extends State<DashboardView> {
     if (zshrcContent?.isEmpty ?? true) {
       return const Text('No .zshrc file found');
     }
-    return Text(zshrcContent!);
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        final key = zshrcContent!.keys.elementAt(index);
+        final value = zshrcContent![key];
+        return ListTile(
+          title: Text(key),
+          subtitle: Text(value.toString()),
+        );
+      },
+      itemCount: zshrcContent!.length,
+    );
   }
 
   Future<void> _readZshrc() async {
     final file = File('/Users/david/.zshrc');
     if (file.existsSync()) {
-      zshrcContent = await file.readAsString();
+      final fileContent = await file.readAsString();
+      zshrcContent = parseZshrcContent(fileContent);
 
       setState(() {});
     } else {
       log('No .zshrc file found');
     }
+  }
+
+  Map<String, String> parseZshrcContent(String content) {
+    final envVars = <String, String>{};
+    final lines = content.split('\n');
+    final exportRegex = RegExp(r'^export\s+([^=]+)="?(.*?)"?$');
+
+    for (final line in lines) {
+      final match = exportRegex.firstMatch(line);
+      if (match != null) {
+        final key = match.group(1)!.trim();
+        final value = match.group(2)!.trim();
+        envVars[key] = value;
+      }
+    }
+
+    return envVars;
   }
 }
