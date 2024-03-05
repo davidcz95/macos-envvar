@@ -26,7 +26,7 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
-  Map<String, dynamic>? zshrcContent;
+  Map<String, Map<int, dynamic>>? zshrcContent;
 
   @override
   void initState() {
@@ -68,12 +68,20 @@ class _DashboardViewState extends State<DashboardView> {
       return const Text('No .zshrc file found');
     }
     return ListView.builder(
+      shrinkWrap: true,
       itemBuilder: (context, index) {
         final key = zshrcContent!.keys.elementAt(index);
         final value = zshrcContent![key];
-        return ListTile(
-          title: Text(key),
-          subtitle: Text(value.toString()),
+        return InkWell(
+          onTap: () {
+            log('Tapped on $key');
+          },
+          child: Card(
+            child: ListTile(
+              title: Text(key),
+              subtitle: Text(value.toString()),
+            ),
+          ),
         );
       },
       itemCount: zshrcContent!.length,
@@ -92,20 +100,32 @@ class _DashboardViewState extends State<DashboardView> {
     }
   }
 
-  Map<String, String> parseZshrcContent(String content) {
-    final envVars = <String, String>{};
+  Map<String, Map<int, String>> parseZshrcContent(String content) {
+    final envVars = <String, Map<int, String>>{};
     final lines = content.split('\n');
     final exportRegex = RegExp(r'^export\s+([^=]+)="?(.*?)"?$');
+
+    // Tracking the occurrence order of each variable
+    final occurrenceTracker = <String, int>{};
 
     for (final line in lines) {
       final match = exportRegex.firstMatch(line);
       if (match != null) {
         final key = match.group(1)!.trim();
         final value = match.group(2)!.trim();
-        envVars[key] = value;
+
+        // Initialize or update the occurrence count
+        occurrenceTracker[key] = (occurrenceTracker[key] ?? 0) + 1;
+        final order = occurrenceTracker[key]!;
+
+        // Initialize the map for this key if it's the first occurrence
+        envVars[key] = envVars[key] ?? {};
+        // Store the value with its order
+        envVars[key]![order] = value;
       }
     }
 
     return envVars;
   }
+
 }
