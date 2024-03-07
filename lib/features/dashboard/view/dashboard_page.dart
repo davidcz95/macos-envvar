@@ -64,6 +64,38 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
+  Widget _buildFilters() {
+    return Column(
+      children: [
+        const Text('Filters'),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            const Text('Filter by:'),
+            const SizedBox(width: 16),
+            DropdownButton<String>(
+              items: const [
+                DropdownMenuItem(child: Text('Name'), value: 'name'),
+                DropdownMenuItem(child: Text('Value'), value: 'value'),
+              ],
+              onChanged: (value) {},
+            ),
+            const SizedBox(width: 16),
+            const Text('Order by:'),
+            const SizedBox(width: 16),
+            DropdownButton<String>(
+              items: const [
+                DropdownMenuItem(child: Text('Name'), value: 'name'),
+                DropdownMenuItem(child: Text('Value'), value: 'value'),
+              ],
+              onChanged: (value) {},
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildZshrcContent() {
     if (zshrcContent?.isEmpty ?? true) {
       return const Text('No .zshrc file found');
