@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:macos_envvar/data/models/env_file.dart';
 import 'package:macos_envvar/features/dashboard/dashboard.dart';
 import 'package:macos_envvar/features/dashboard/widgets/custom_expansion_tile_scale.dart';
 import 'package:macos_envvar/l10n/l10n.dart';
@@ -100,11 +101,13 @@ class _DashboardViewState extends State<DashboardView> {
     if (zshrcContent?.isEmpty ?? true) {
       return const Text('No .zshrc file found');
     }
+    final envModel = ZshrcContent(content: zshrcContent!);
+
     return ListView.builder(
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        final key = zshrcContent!.keys.elementAt(index);
-        final value = zshrcContent![key];
+        final key = envModel.content.keys.elementAt(index);
+        final value = envModel.content[key];
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           child: CustomExpansionTileScale(

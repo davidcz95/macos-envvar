@@ -18,7 +18,7 @@ class ZshrcContent {
     );
   }
 
-  final Map<String, Map<int, String>> content;
+  final Map<String, Map<int, dynamic>> content;
 
   Map<String, Object?> toJson() {
     return {
