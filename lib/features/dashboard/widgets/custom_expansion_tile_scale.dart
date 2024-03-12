@@ -92,9 +92,9 @@ class _CustomExpansionTileScaleState extends State<CustomExpansionTileScale>
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          const Color.fromARGB(255, 30, 11, 234), // Darker color
+          const Color.fromARGB(255, 30, 11, 234), 
           Theme.of(context).cardColor, // Lighter color
-          const Color.fromARGB(255, 30, 11, 234), // Darker color
+          const Color.fromARGB(255, 30, 11, 234), 
         ],
       ),
       boxShadow: const [

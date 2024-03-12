@@ -76,8 +76,8 @@ class _DashboardViewState extends State<DashboardView> {
             const SizedBox(width: 16),
             DropdownButton<String>(
               items: const [
-                DropdownMenuItem(child: Text('Name'), value: 'name'),
-                DropdownMenuItem(child: Text('Value'), value: 'value'),
+                DropdownMenuItem(value: 'name', child: Text('Name')),
+                DropdownMenuItem(value: 'value', child: Text('Value')),
               ],
               onChanged: (value) {},
             ),
@@ -86,8 +86,8 @@ class _DashboardViewState extends State<DashboardView> {
             const SizedBox(width: 16),
             DropdownButton<String>(
               items: const [
-                DropdownMenuItem(child: Text('Name'), value: 'name'),
-                DropdownMenuItem(child: Text('Value'), value: 'value'),
+                DropdownMenuItem(value: 'name', child: Text('Name')),
+                DropdownMenuItem(value: 'value', child: Text('Value')),
               ],
               onChanged: (value) {},
             ),
@@ -133,6 +133,8 @@ class _DashboardViewState extends State<DashboardView> {
     if (file.existsSync()) {
       final fileContent = await file.readAsString();
       zshrcContent = parseZshrcContent(fileContent);
+      final issues = detectIssuesOrImprovementsInZshrc(fileContent);
+      log('Issues found: $issues');
 
       setState(() {});
     } else {
@@ -166,5 +168,28 @@ class _DashboardViewState extends State<DashboardView> {
     }
 
     return envVars;
+  }
+
+  String detectIssuesOrImprovementsInZshrc(String content) {
+    final issues = <String>[];
+    final lines = content.split('\n');
+    final exportRegex = RegExp(r'^export\s+([^=]+)="?(.*?)"?$');
+
+    for (final line in lines) {
+      final match = exportRegex.firstMatch(line);
+      if (match != null) {
+        final key = match.group(1)!.trim();
+        final value = match.group(2)!.trim();
+
+        if (key.isEmpty) {
+          issues.add('Empty key found');
+        }
+        if (value.isEmpty) {
+          issues.add('Empty value found for key: $key');
+        }
+      }
+    }
+
+    return issues.join('\n');
   }
 }
