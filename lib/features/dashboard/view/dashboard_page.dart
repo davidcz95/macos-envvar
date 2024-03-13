@@ -187,7 +187,14 @@ class _DashboardViewState extends State<DashboardView> {
         if (value.isEmpty) {
           issues.add('Empty value found for key: $key');
         }
+      } else if (line.isNotEmpty) {
+        issues.add('Invalid line found: $line');
+      } else if (line.startsWith('#')) {
+        issues.add('Commented line found: $line');
+      } else if (line.startsWith('export')) {
+        issues.add('Invalid export line found: $line');
       }
+
     }
 
     return issues.join('\n');
