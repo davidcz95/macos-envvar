@@ -193,8 +193,15 @@ class _DashboardViewState extends State<DashboardView> {
         issues.add('Commented line found: $line');
       } else if (line.startsWith('export')) {
         issues.add('Invalid export line found: $line');
-      }
-
+      } else if (line.startsWith('alias')) {
+        issues.add('Alias line found: $line');
+      } else if (line.startsWith('source')) {
+        issues.add('Source line found: $line');
+      } else if (line.startsWith('export PATH')) {
+        issues.add('Path line found: $line');
+      } else if (line.startsWith('export ZSH')) {
+        issues.add('ZSH line found: $line');
+      } 
     }
 
     return issues.join('\n');
