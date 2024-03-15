@@ -29,6 +29,8 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
   Map<String, Map<int, dynamic>>? zshrcContent;
+  String nameValue = 'name';
+  String valueValue = 'value';
 
   @override
   void initState() {
@@ -58,6 +60,7 @@ class _DashboardViewState extends State<DashboardView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('Welcome to the Envs Dashboard'),
+          _buildFilters(),
           const SizedBox(height: 16),
           _buildZshrcContent(),
         ],
@@ -75,21 +78,27 @@ class _DashboardViewState extends State<DashboardView> {
             const Text('Filter by:'),
             const SizedBox(width: 16),
             DropdownButton<String>(
+              value: nameValue,
               items: const [
                 DropdownMenuItem(value: 'name', child: Text('Name')),
                 DropdownMenuItem(value: 'value', child: Text('Value')),
               ],
-              onChanged: (value) {},
+              onChanged: (value) => setState(() {
+                nameValue = value!;
+              }),
             ),
             const SizedBox(width: 16),
             const Text('Order by:'),
             const SizedBox(width: 16),
             DropdownButton<String>(
+              value: valueValue,
               items: const [
                 DropdownMenuItem(value: 'name', child: Text('Name')),
                 DropdownMenuItem(value: 'value', child: Text('Value')),
               ],
-              onChanged: (value) {},
+              onChanged: (value) => setState(() {
+                valueValue = value!;
+              }),
             ),
           ],
         ),
@@ -108,18 +117,24 @@ class _DashboardViewState extends State<DashboardView> {
       itemBuilder: (context, index) {
         final key = envModel.content.keys.elementAt(index);
         final value = envModel.content[key];
+        final filteredList = value?.entries
+            .where((entry) => entry.key.toString().contains(nameValue))
+            .toList();
+        final orderedList = filteredList?.sort((a, b) {
+          if (valueValue == 'name') {
+            return a.key.toString().compareTo(b.key.toString());
+          } else {
+            return a.value.toString().compareTo(b.value.toString());
+          }
+        });
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           child: CustomExpansionTileScale(
             title: Text(key),
             children: [
-              ...value?.entries
-                      .map(
-                        (entry) =>
-                            Text('Order: ${entry.key}, Value: ${entry.value}'),
-                      )
-                      .toList() ??
-                  [],
+              ...filteredList!.map(
+                (entry) => Text('Order: ${entry.key}, Value: ${entry.value}'),
+              ),
             ],
           ),
         );
@@ -201,7 +216,9 @@ class _DashboardViewState extends State<DashboardView> {
         issues.add('Path line found: $line');
       } else if (line.startsWith('export ZSH')) {
         issues.add('ZSH line found: $line');
-      } 
+      } else if (line.startsWith('#')) {
+        issues.add('Commented line found: $line');
+      }
     }
 
     return issues.join('\n');
