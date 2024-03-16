@@ -41,7 +41,10 @@ class _DashboardViewState extends State<DashboardView> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.dashboardAppBarTitle)),
+      appBar: AppBar(title: Text(l10n.dashboardAppBarTitle), ),
+      drawer: const Drawer(
+        child: Text('Menu'),
+      ),
       body: _buildContent(),
       floatingActionButton: _buildActionButton(context, l10n),
     );
@@ -135,6 +138,7 @@ class _DashboardViewState extends State<DashboardView> {
               ...filteredList!.map(
                 (entry) => Text('Order: ${entry.key}, Value: ${entry.value}'),
               ),
+              
             ],
           ),
         );
