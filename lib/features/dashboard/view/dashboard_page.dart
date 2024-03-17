@@ -31,6 +31,7 @@ class _DashboardViewState extends State<DashboardView> {
   Map<String, Map<int, dynamic>>? zshrcContent;
   String nameValue = 'name';
   String valueValue = 'value';
+  String issues = 'No issues found';
 
   @override
   void initState() {
@@ -63,11 +64,24 @@ class _DashboardViewState extends State<DashboardView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('Welcome to the Envs Dashboard'),
+          const SizedBox(height: 16),
+          _buildIssues(),
+          
           _buildFilters(),
           const SizedBox(height: 16),
           _buildZshrcContent(),
         ],
       ),
+    );
+  }
+
+  Widget _buildIssues() {
+    return Column(
+      children: [
+        const Text('Issues'),
+        const SizedBox(height: 16),
+        Text(issues),
+      ],
     );
   }
 
@@ -152,7 +166,7 @@ class _DashboardViewState extends State<DashboardView> {
     if (file.existsSync()) {
       final fileContent = await file.readAsString();
       zshrcContent = parseZshrcContent(fileContent);
-      final issues = detectIssuesOrImprovementsInZshrc(fileContent);
+      issues = detectIssuesOrImprovementsInZshrc(fileContent);
       log('Issues found: $issues');
 
       setState(() {});
