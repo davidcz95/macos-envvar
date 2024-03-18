@@ -137,13 +137,7 @@ class _DashboardViewState extends State<DashboardView> {
         final filteredList = value?.entries
             .where((entry) => entry.key.toString().contains(nameValue))
             .toList();
-        final orderedList = filteredList?.sort((a, b) {
-          if (valueValue == 'name') {
-            return a.key.toString().compareTo(b.key.toString());
-          } else {
-            return a.value.toString().compareTo(b.value.toString());
-          }
-        });
+      
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
           child: CustomExpansionTileScale(
