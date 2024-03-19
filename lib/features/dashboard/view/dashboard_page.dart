@@ -129,29 +129,45 @@ class _DashboardViewState extends State<DashboardView> {
     }
     final envModel = ZshrcContent(content: zshrcContent!);
 
-    return ListView.builder(
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        final key = envModel.content.keys.elementAt(index);
-        final value = envModel.content[key];
-        final filteredList = value?.entries
-            .where((entry) => entry.key.toString().contains(nameValue))
-            .toList();
-      
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-          child: CustomExpansionTileScale(
-            title: Text(key),
-            children: [
-              ...filteredList!.map(
-                (entry) => Text('Order: ${entry.key}, Value: ${entry.value}'),
-              ),
-              
-            ],
+    return Column(
+      children: [
+        TextField(
+          decoration: const InputDecoration(
+            labelText: 'Search',
+            hintText: 'Search',
+            prefixIcon: Icon(Icons.search),
           ),
-        );
-      },
-      itemCount: zshrcContent!.length,
+          onChanged: (value) {
+            setState(() {
+              nameValue = value;
+            });
+          },
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final key = envModel.content.keys.elementAt(index);
+            final value = envModel.content[key];
+            final filteredList = value?.entries
+                .where((entry) => entry.key.toString().contains(nameValue))
+                .toList();
+          
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+              child: CustomExpansionTileScale(
+                title: Text(key),
+                children: [
+                  ...filteredList!.map(
+                    (entry) => Text('Order: ${entry.key}, Value: ${entry.value}'),
+                  ),
+                  
+                ],
+              ),
+            );
+          },
+          itemCount: zshrcContent!.length,
+        ),
+      ],
     );
   }
 
