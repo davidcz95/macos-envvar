@@ -42,7 +42,9 @@ class _DashboardViewState extends State<DashboardView> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.dashboardAppBarTitle), ),
+      appBar: AppBar(
+        title: Text(l10n.dashboardAppBarTitle),
+      ),
       drawer: const Drawer(
         child: Text('Menu'),
       ),
@@ -66,7 +68,6 @@ class _DashboardViewState extends State<DashboardView> {
           const Text('Welcome to the Envs Dashboard'),
           const SizedBox(height: 16),
           _buildIssues(),
-          
           _buildFilters(),
           const SizedBox(height: 16),
           _buildZshrcContent(),
@@ -125,7 +126,17 @@ class _DashboardViewState extends State<DashboardView> {
 
   Widget _buildZshrcContent() {
     if (zshrcContent?.isEmpty ?? true) {
-      return const Text('No .zshrc file found');
+      return const Column(
+        children: [
+          Text('No .zshrc file found'),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Path',
+              hintText: 'Provide the path to the .zshrc file',
+            ),
+          ),
+        ],
+      );
     }
     final envModel = ZshrcContent(content: zshrcContent!);
 
@@ -151,16 +162,16 @@ class _DashboardViewState extends State<DashboardView> {
             final filteredList = value?.entries
                 .where((entry) => entry.key.toString().contains(nameValue))
                 .toList();
-          
+
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
               child: CustomExpansionTileScale(
                 title: Text(key),
                 children: [
                   ...filteredList!.map(
-                    (entry) => Text('Order: ${entry.key}, Value: ${entry.value}'),
+                    (entry) =>
+                        Text('Order: ${entry.key}, Value: ${entry.value}'),
                   ),
-                  
                 ],
               ),
             );
