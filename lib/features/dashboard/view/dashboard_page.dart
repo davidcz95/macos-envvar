@@ -32,6 +32,7 @@ class _DashboardViewState extends State<DashboardView> {
   String nameValue = 'name';
   String valueValue = 'value';
   String issues = 'No issues found';
+  String path = '';
 
   @override
   void initState() {
@@ -126,14 +127,17 @@ class _DashboardViewState extends State<DashboardView> {
 
   Widget _buildZshrcContent() {
     if (zshrcContent?.isEmpty ?? true) {
-      return const Column(
+      return Column(
         children: [
-          Text('No .zshrc file found'),
+          const Text('No .zshrc file found'),
           TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Path',
               hintText: 'Provide the path to the .zshrc file',
             ),
+            onChanged: (value) {
+              path = value;
+            },
           ),
         ],
       );
